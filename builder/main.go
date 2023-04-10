@@ -1,10 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"design-patterns-go/builder/computer"
+	"fmt"
+)
 
 func main() {
-	builder := NewComputerBuilder()
-	director := NewComputerDirector(builder)
+	builder := computer.NewComputerBuilder()
+	director := computer.NewComputerDirector(builder)
 
 	gamingComputer := director.BuildGamingComputer()
 	println("Gaming computer:")
@@ -23,70 +26,10 @@ func main() {
 	println("CPU:", customComputer.CPU)
 	println("GPU:", customComputer.GPU)
 	println("RAM:", customComputer.RAM)
-}
 
-// Computer type
-
-type Computer struct {
-	CPU string
-	GPU string
-	RAM int
-}
-
-// Computer builder interface
-
-type IComputerBuilder interface {
-	SetCPU(s string) IComputerBuilder
-	SetGPU(s string) IComputerBuilder
-	SetRAM(i int) IComputerBuilder
-	Build() Computer
-}
-
-// Computer builder
-
-func NewComputerBuilder() *ComputerBuilder {
-	return &ComputerBuilder{}
-}
-
-type ComputerBuilder struct {
-	computer Computer
-}
-
-func (cb *ComputerBuilder) SetCPU(s string) IComputerBuilder {
-	cb.computer.CPU = s
-	return cb
-}
-
-func (cb *ComputerBuilder) SetGPU(s string) IComputerBuilder {
-	cb.computer.GPU = s
-	return cb
-}
-
-func (cb *ComputerBuilder) SetRAM(i int) IComputerBuilder {
-	cb.computer.RAM = i
-	return cb
-}
-
-func (cb *ComputerBuilder) Build() Computer {
-	return cb.computer
-}
-
-// Computer director
-
-func NewComputerDirector(builder IComputerBuilder) *ComputerDirector {
-	return &ComputerDirector{
-		builder: builder,
-	}
-}
-
-type ComputerDirector struct {
-	builder IComputerBuilder
-}
-
-func (cd *ComputerDirector) BuildGamingComputer() Computer {
-	return cd.builder.SetCPU("High-end CPU").SetGPU("High-end GPU").SetRAM(32).Build()
-}
-
-func (cd *ComputerDirector) BuildWorkstation() Computer {
-	return cd.builder.SetCPU("Medium-end CPU").SetGPU("Medium-end GPU").SetRAM(16).Build()
+	defaultComputer := builder.Build()
+	fmt.Println("Default computer:")
+	println("CPU:", defaultComputer.CPU)
+	println("GPU:", defaultComputer.GPU)
+	println("RAM:", defaultComputer.RAM)
 }
